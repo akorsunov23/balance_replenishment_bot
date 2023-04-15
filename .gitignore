@@ -3,4 +3,4 @@ venv/
 /.idea/
 .venv
 .env
-
+*.log

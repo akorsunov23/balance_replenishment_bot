@@ -1,4 +1,5 @@
 from aiogram import executor
+from config.logging import *
 from config.bot_config import dp, bot
 from handlers.start.start import *
 from handlers.start.amount_request import *
