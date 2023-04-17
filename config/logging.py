@@ -2,7 +2,8 @@ import logging
 
 
 logging.basicConfig(level=logging.DEBUG,
-                    format='[%(asctime)s] [%(levelname)s] [%(message)s]')
+                    format='[%(asctime)s] [%(levelname)s] [%(message)s]',
+                    filemode='a')
 
 error_handler = logging.FileHandler('error.log')
 error_handler.setLevel(logging.WARNING)
