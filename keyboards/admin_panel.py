@@ -41,4 +41,3 @@ def log() -> types.InlineKeyboardMarkup():
 	result.row(error_log, info_log)
 
 	return result
-

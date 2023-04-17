@@ -14,12 +14,15 @@ PAYMENTS_TOKEN = os.getenv('PAYMENTS_TOKEN')
 
 @dp.callback_query_handler(text='replenish_balance')
 async def amount_request(callback_query: types.CallbackQuery, state: FSMContext):
+	"""Хандлер, реагирующий на кнопку /пополнить баланс/, и запрашивающий желаемую сумму пополнения."""
+
 	await callback_query.message.answer('Введите сумму, на которую вы хотите пополнить баланс:')
 	await state.set_state(StateUser.entered_amounts)
 
 
 @dp.message_handler(state=StateUser.entered_amounts)
 async def payment_processing(message: types.Message, state: FSMContext):
+	"""Генерация платёжки PayMaster"""
 
 	if message.text.isdigit() and PAYMENTS_TOKEN.split(':')[1] == 'TEST':
 		price = types.LabeledPrice(label='Желаемая сумма пополнения', amount=int(message.text) * 100)
@@ -40,12 +43,16 @@ async def payment_processing(message: types.Message, state: FSMContext):
 
 @dp.pre_checkout_query_handler(lambda query: True, state=StateUser.payment_processing)
 async def pre_checkout_query(pre_checkout_q: types.PreCheckoutQuery, state: FSMContext):
+	"""Обработка и утверждение платежа."""
+
 	await bot.answer_pre_checkout_query(pre_checkout_q.id, ok=True)
 	await state.set_state(StateUser.replenishment_passed)
 
 
 @dp.message_handler(content_types=ContentType.SUCCESSFUL_PAYMENT, state=StateUser.replenishment_passed)
 async def successful_payment(message: types.Message, state: FSMContext):
+	"""Проверка платежа, при успешном выполнении добавляет данные в БД и выводит соответствующие сообщение."""
+
 	price = message.successful_payment.total_amount // 100
 	currency = message.successful_payment.currency
 

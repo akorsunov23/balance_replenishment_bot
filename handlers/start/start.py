@@ -6,6 +6,7 @@ from keyboards.user_replenish_balance import replenish_balance
 
 @dp.message_handler(commands=['start'])
 async def start_command(message: types.Message):
+	"""Хандлер, реагирующий на команду start, и НЕ админу предлагает пополнить баланс."""
 	user_id = message.from_user.id
 
 	if user_id == ADMIN:
@@ -23,12 +24,3 @@ async def start_command(message: types.Message):
 				),
 				reply_markup=replenish_balance
 			)
-		# elif User.get(User.user_id == message.from_user.id).is_active:
-		# 	await message.answer(
-		# 		'Привет, {username}!\n'
-		# 		'Я - бот для пополнения баланса.\n'
-		# 		'Нажмите на кнопку, чтобы пополнить баланс.'.format(
-		# 			username=message.from_user.full_name
-		# 		),
-		# 		reply_markup=replenish_balance
-		# 	)

@@ -8,12 +8,14 @@ from utils.state import StateAdmin
 
 @dp.callback_query_handler(text='log_list')
 async def logs(callback_query: types.CallbackQuery, state: FSMContext):
+	"""Хандлер, выгружающий доступные логи."""
 	await callback_query.message.answer(text='Какие логи показать:', reply_markup=log())
 	await state.set_state(StateAdmin.get_log)
 
 
 @dp.callback_query_handler(state=StateAdmin.get_log)
 async def get_error_log(callback_query: types.CallbackQuery, state: FSMContext):
+	"""Хандлер, выгружающий доступные логи в зависимости от выбранной категории."""
 	text = str()
 	file = str()
 	if callback_query.data == 'error_log':

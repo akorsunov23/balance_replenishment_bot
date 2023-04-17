@@ -8,12 +8,14 @@ from keyboards.admin_panel import users_list, action_for_user
 
 @dp.callback_query_handler(text='users_list')
 async def users(callback_query: types.CallbackQuery, state: FSMContext):
+	"""Хандлер, выгружающий список активных пользователей с балансом."""
 	await callback_query.message.answer(text='Список пользователей:', reply_markup=users_list())
 	await state.set_state(StateAdmin.get_list)
 
 
 @dp.callback_query_handler(state=StateAdmin.get_list)
 async def user_detail(callback_query: types.CallbackQuery, state: FSMContext):
+	"""Хандлер, с методами действий над пользователем."""
 	user = User.get(User.user_id == callback_query.data)
 
 	await callback_query.message.answer(
@@ -27,7 +29,11 @@ async def user_detail(callback_query: types.CallbackQuery, state: FSMContext):
 
 @dp.callback_query_handler(text='block_user', state=StateAdmin.get_user)
 async def block_user(callback_query: types.CallbackQuery,  state: FSMContext):
-
+	"""
+	Хандлер, позволяющий заблокировать пользователя.
+	После нажатия на кнопку блокировки, в БД меняется статус is_active,
+	и после этого бот не реагирует на его команды.
+	"""
 	async with state.proxy() as data:
 		user = data['user']
 
@@ -40,12 +46,15 @@ async def block_user(callback_query: types.CallbackQuery,  state: FSMContext):
 
 @dp.callback_query_handler(text='update_balance', state=StateAdmin.get_user)
 async def update_balance_user(callback_query: types.CallbackQuery,  state: FSMContext):
+	"""Хандлер, реагирующий на кнопку /изменить баланс/, и запрашивающий новые данные."""
+
 	await callback_query.message.answer(text='Введите новый баланс для пользователя:')
 	await state.set_state(StateAdmin.update_user)
 
 
 @dp.message_handler(state=StateAdmin.update_user)
 async def update_balance_user(message: types.Message,  state: FSMContext):
+	"""Хандлер, устанавливает новые данные в БД по балансу."""
 
 	if message.text.isdigit():
 		async with state.proxy() as data:

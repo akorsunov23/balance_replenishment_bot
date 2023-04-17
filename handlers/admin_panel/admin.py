@@ -6,6 +6,7 @@ from keyboards.admin_panel import admin_panel
 
 @dp.message_handler(commands=['admin'])
 async def start_command(message: types.Message):
+	"""Хандлер, реагирующий на команду /admin, и при проверке соответствия открывается панель управления."""
 
 	user_id = message.from_user.id
 
