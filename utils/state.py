@@ -11,4 +11,6 @@ class StateAdmin(StatesGroup):
 	get_list = State()
 	get_user = State()
 	update_user = State()
+	get_log = State()
+
 
